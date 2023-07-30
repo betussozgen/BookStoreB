@@ -1,6 +1,8 @@
+using BookStoreB.DBOperations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +33,8 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookStore", Version = "v1" });
         });
+        //6-Startup.cs içerisinde ConfigureServices() içerisinde DbContext'in servis olarak eklenmesi
+        services.AddDbContext<BookStoreDbContext>(options => options.UseInMemoryDatabase(databaseName: "BookAtoreDB"));
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
