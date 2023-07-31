@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace BookStoreB;
@@ -35,6 +36,7 @@ public class Startup
         });
         //6-Startup.cs içerisinde ConfigureServices() içerisinde DbContext'in servis olarak eklenmesi
         services.AddDbContext<BookStoreDbContext>(options => options.UseInMemoryDatabase(databaseName: "BookAtoreDB"));
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

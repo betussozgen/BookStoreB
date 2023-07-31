@@ -1,4 +1,5 @@
-﻿using BookStoreB.Common;
+﻿using AutoMapper;
+using BookStoreB.Common;
 using BookStoreB.DBOperations;
 using static BookStoreB.BookOperations.GetBooks.GetBooksQuery;
 
@@ -8,13 +9,15 @@ namespace BookStoreB.BookOperations.GetBookDetail
     {
 
         private readonly BookStoreDbContext _dbContext;
+        private readonly IMapper _mapper;
 
         public int BookId { get; set; }
 
         //Constructor
-        public GetBookDetailQuery(BookStoreDbContext dbContext)
+        public GetBookDetailQuery(BookStoreDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         //asıl işi yapacak metotum.
@@ -25,11 +28,15 @@ namespace BookStoreB.BookOperations.GetBookDetail
             {
                 throw new InvalidOperationException("Kitap bulunamadı.");
             }
-            BookDetailViewModel vm = new BookDetailViewModel();
-            vm.Title = book.Title;
-            vm.PageCount = book.PageCount;
-            vm.PublishDate = book.PublishDate.Date.ToString("dd/MM/yyy");
-            vm.Genre = ((GenreEnum)book.GenreId).ToString();
+
+            BookDetailViewModel vm = _mapper.Map<BookDetailViewModel>(book);
+            //BookDetailViewModel vm = new BookDetailViewModel();
+            //vm.Title = book.Title;
+            //vm.PageCount = book.PageCount;
+            //vm.PublishDate = book.PublishDate.Date.ToString("dd/MM/yyy");
+            //vm.Genre = ((GenreEnum)book.GenreId).ToString();
+            //return vm;
+
             return vm;
 
         }
