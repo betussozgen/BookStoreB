@@ -1,6 +1,9 @@
-﻿using BookStoreB.DBOperations;
+﻿using BookStoreB.BookOperations.CreateBook;
+using BookStoreB.BookOperations.GetBooks;
+using BookStoreB.DBOperations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static BookStoreB.BookOperations.CreateBook.CreateBookCommand;
 
 namespace BookStoreB.Controllers
 {
@@ -17,10 +20,11 @@ namespace BookStoreB.Controllers
         }
         
         [HttpGet]
-        public List<Book> GetBooks()
+        public IActionResult GetBooks()
         {
-            var bookList = _context.Books.OrderBy(x => x.Id).ToList<Book>();
-            return bookList;
+            GetBooksQuery query = new GetBooksQuery(_context);
+            var result = query.Handle();
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
@@ -40,14 +44,20 @@ namespace BookStoreB.Controllers
         //Post
         [HttpPost]
 
-        public IActionResult AddBook([FromBody] Book newBook)
+        public IActionResult AddBook([FromBody] CreateBookModel newBook)
         {
-            var book = _context.Books.SingleOrDefault(x=> x.Title == newBook.Title);
-            if (book is not null)
-                return BadRequest();
 
-            _context.Books.Add(newBook);
-            _context.SaveChanges(); //herdegisiklikte kaydetmen lazım.
+            CreateBookCommand command = new CreateBookCommand(_context);
+            try
+            {
+               
+                command.Model = newBook;
+                command.Handle();
+            }
+            catch (Exception ex) 
+            { 
+                return BadRequest(ex.Message);  
+            }
             return Ok();
         }
         //Put
