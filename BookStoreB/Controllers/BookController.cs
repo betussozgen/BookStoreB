@@ -13,6 +13,7 @@ using static BookStoreB.BookOperations.GetBookDetail.GetBookDetailQuery;
 using static BookStoreB.BookOperations.UpdateBook.UpdateBookCommand;
 using FluentValidation.Results;
 using FluentValidation;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace BookStoreB.Controllers
 {
@@ -50,6 +51,10 @@ namespace BookStoreB.Controllers
             {
                 GetBookDetailQuery query = new GetBookDetailQuery(_context, _mapper);
                 query.BookId = id;
+
+                GetBookDetailQueryValidator validator = new GetBookDetailQueryValidator();
+                validator.ValidateAndThrow(query);
+                
                 result = query.Handle();
             }
             catch (Exception ex) 
@@ -102,11 +107,16 @@ namespace BookStoreB.Controllers
         public IActionResult UpdateBook(int id, [FromBody] UpdateBookModel updatedBook)
         {
 
-            UpdateBookCommand command = new UpdateBookCommand(_context);
+            
             try
             {
+                UpdateBookCommand command = new UpdateBookCommand(_context);
                 command.BookId = id;
                 command.Model = updatedBook;
+
+                UpdateBookCommandValidator validatior = new UpdateBookCommandValidator();
+                validatior.ValidateAndThrow(command);
+
                 command.Handle();
             }
             catch (Exception ex)
