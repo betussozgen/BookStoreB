@@ -36,6 +36,7 @@ public class Startup
         });
         //6-Startup.cs içerisinde ConfigureServices() içerisinde DbContext'in servis olarak eklenmesi
         services.AddDbContext<BookStoreDbContext>(options => options.UseInMemoryDatabase(databaseName: "BookAtoreDB"));
+        //Automapper: 2.Proje içerisinde AutoMappper'ý servis olarak kullanabilmemiz için Startup.cs dosyasý içerisindeki Configure Service metoduna aþaðýdaki kod satýrýnýn eklenmesi gerekir.
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 

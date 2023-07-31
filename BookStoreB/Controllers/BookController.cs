@@ -19,6 +19,9 @@ namespace BookStoreB.Controllers
     {
 
         private readonly BookStoreDbContext _context;
+
+        //4.Eklemiş olduğumuz Dependency Injection paketi sayesinde 
+        //Controller'ın kurucu fonksiyonunda mapper'ı kod içerisinde kullanılmak üzere dahil edebiliriz.
         private readonly IMapper _mapper;
 
         public BookController (BookStoreDbContext context, IMapper mapper)
