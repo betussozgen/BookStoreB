@@ -1,9 +1,11 @@
 ﻿using BookStoreB.BookOperations.CreateBook;
+using BookStoreB.BookOperations.GetBookDetail;
 using BookStoreB.BookOperations.GetBooks;
 using BookStoreB.DBOperations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static BookStoreB.BookOperations.CreateBook.CreateBookCommand;
+using static BookStoreB.BookOperations.GetBookDetail.GetBookDetailQuery;
 
 namespace BookStoreB.Controllers
 {
@@ -28,10 +30,21 @@ namespace BookStoreB.Controllers
         }
 
         [HttpGet("{id}")]
-        public Book GetById(int id)
+        public IActionResult GetById(int id)
         {
-            var book = _context.Books.Where(book => book.Id == id).SingleOrDefault();
-            return book;
+            BookDetailViewModel result;
+            try
+            {
+                GetBookDetailQuery query = new GetBookDetailQuery(_context);
+                query.BookId = id;
+                result = query.Handle();
+            }
+            catch (Exception ex) 
+            { 
+                return BadRequest(ex.Message);  
+            
+            }
+            return Ok(result);
         }
 
         //[HttpGet]
@@ -43,7 +56,6 @@ namespace BookStoreB.Controllers
 
         //Post
         [HttpPost]
-
         public IActionResult AddBook([FromBody] CreateBookModel newBook)
         {
 
